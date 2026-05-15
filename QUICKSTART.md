@@ -18,10 +18,11 @@ For someone who has a computer with Claude Code already installed, a Telegram ac
 git clone <this-repo-url> my-thread
 cd my-thread
 
-# Rename your way:
-# - Pick an identity-name (it doesn't have to be "Thread")
-# - Edit scripts/margin_capture_hook.py:
-#     CURATOR_SUBJECT = "YourName"
+# Rename your way — pick an identity-name (it doesn't have to be "Thread").
+# The margin capture hook reads this from an environment variable, so you
+# don't have to edit any source files. Add to your shell profile:
+
+export THREAD_CURATOR_SUBJECT=YourName
 ```
 
 ### 2. Install spine + mem
