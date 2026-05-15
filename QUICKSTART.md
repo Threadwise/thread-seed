@@ -1,6 +1,6 @@
-# Quickstart — 30 minutes from zero to running
+# Quickstart — clone, open, Claude leads from there
 
-For someone who has a computer with Claude Code already installed, a Telegram account is optional. Allow ~30 minutes for the substrate tier.
+For someone who has Claude Code installed, allow ~30 minutes total — most of which is the conversation Claude has with you during setup.
 
 ## Prerequisites
 
@@ -8,63 +8,46 @@ For someone who has a computer with Claude Code already installed, a Telegram ac
 - Python 3.10+ (Mac/Linux; on Windows, Python 3.10+ inside WSL2 or as a standalone install)
 - Claude Code installed (https://claude.com/product/claude-code) — on Windows, the Claude Desktop app at https://claude.com/download is the simplest path
 - A Claude Pro subscription (~$20/mo) or higher tier, OR an Anthropic API key for pay-per-use. Pro covers Claude Code as of mid-2026.
-- (Optional) A Telegram account if you want phone access
+- (Optional) A Telegram account if you want phone access later
 
 ## Steps
 
-### 1. Clone and rename
+### 1. Clone
 
 ```bash
 git clone <this-repo-url> my-thread
 cd my-thread
-
-# Rename your way — pick an identity-name (it doesn't have to be "Thread").
-# The margin capture hook reads this from an environment variable, so you
-# don't have to edit any source files. Add to your shell profile:
-
-export THREAD_CURATOR_SUBJECT=YourName
 ```
 
-### 2. Install spine + mem
-
-The seed depends on three public PyPI packages (all Apache-2.0):
-
-- **grafeo** — embeddable graph database with vector support
-- **grafeo-memory** — AI memory layer on top of grafeo (the unified spine + mem)
-- **memvid** *(optional)* — video-based episodic memory store
-
-Install them in a fresh virtualenv:
+### 2. Open Claude Code in the directory
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate          # on Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+claude
 ```
 
-Verify the CLI works:
+### 3. Claude leads setup from here
 
-```bash
-grafeo-memory --help
-grafeo-memory stats
-```
+When Claude wakes up reading the placeholder-filled `CLAUDE.md`, it will detect first-run state and lead you through onboarding interactively in conversation:
 
-The `grafeo-memory` command is your primary interface. It exposes the operations the seed's hooks call: `add` writes new entries, `search` queries by similarity, `list` shows recent. Database lives under `./grafeo_memory.db` in the working directory by default (override with `--db <path>` or `GRAFEO_MEMORY_DB` env var).
+- Pick an identity-name (it doesn't have to be "Thread")
+- Tell Claude who you are, your domain, what pulls you to capture
+- Pick a spine + mem implementation:
+  - **Simplest (recommended)**: `grafeo-memory` via `pip install -r requirements.txt` — one canonical reference, works out of the box
+  - **Substrate-engineer**: bare Kuzu + LanceDB hybrid — more control, more setup, build your own wrapper
+  - **Skip-for-now**: hooks no-op until you decide later (valid first-month posture)
+- Claude writes your interview answers as your first spine + mem entries — substrate-formation begins in conversation, day-one substrate isn't empty
+- Claude generates your customized `CLAUDE.md` from your answers
+- Claude asks you to set the curator-subject env var:
+  ```bash
+  export THREAD_CURATOR_SUBJECT=YourIdentityName  # add to ~/.zshrc or ~/.bashrc
+  ```
+- Restart Claude Code when Claude prompts
 
-If you skip this step, the seed's hooks become no-ops — Claude Code still runs, the CLAUDE.md still loads, but no persistent memory writes happen.
-
-### 3. Customize CLAUDE.md
-
-Open `CLAUDE.md` and fill in the placeholder sections:
-
-- **Who I am** — substrate-introduction, not a resume
-- **My domain** — the knowledge-territory your work lives in
-- **What pulls me to capture** — moments worth marking
-
-Read the rest of the file carefully. It teaches the disposition. You'll edit it more in 2-4 weeks once you've used the system and know what to adjust.
+That's substrate setup done. You're running.
 
 ### 4. Wire the hooks (optional but recommended)
 
-In your Claude Code config (`~/.claude/settings.json`), add:
+If Claude didn't help you wire these during onboarding, add to your Claude Code config (`~/.claude/settings.json`):
 
 ```json
 {
@@ -87,7 +70,7 @@ The first hook surfaces relevant substrate into your context per prompt. The sec
 
 ### 5. (Optional) Import existing journal
 
-If you have years of journal text you want as initial substrate:
+If you have years of journal text you want as initial substrate beyond what the interview captured:
 
 ```bash
 python3 scripts/journal_import.py --path /path/to/your/journal/
@@ -95,7 +78,7 @@ python3 scripts/journal_import.py --path /path/to/your/journal/
 
 This sends your journal text through the Claude API in chunks to extract entities and frames. Read `DATA_FLOW.md` first to understand what's sent where.
 
-You can also skip this and build substrate manually from day one.
+You can also skip this and build substrate manually from day one (or just continue from the interview seeds).
 
 ### 6. (Optional) Telegram bot
 
@@ -118,15 +101,6 @@ export THREAD_BOT_ALLOWED_USERS="123456789"
 # Start the bot
 python3 scripts/telegram_bot_adapter.py
 ```
-
-### 7. Start Claude Code
-
-```bash
-cd my-thread
-claude
-```
-
-You're running. The first session won't feel like much. Substrate compounds.
 
 ## Day-one practice
 
