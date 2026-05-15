@@ -176,61 +176,69 @@ def scan_session(session_path):
 
 
 def run_spine_add(content, reach):
-    """Write to spine via subprocess. Falls back to plain capture if not structured."""
+    """Write a structured-or-plain marker to grafeo-memory.
+
+    Structured markers (Subject relation "object") are kept verbatim — grafeo-memory's
+    extraction layer parses them into graph edges. Plain markers are wrapped as
+    '<CURATOR_SUBJECT> captured: <content>' so they remain walkable from the curator node.
+    """
     structured = STRUCTURED_RE.match(content)
     if structured:
-        subject = structured.group(1)
-        relation = structured.group(2)
-        obj = structured.group(3).strip()
+        text = content
         if reach:
-            obj = f"{obj} [reach: {reach}]"
-        cmd = ["spine", "add", subject, relation, obj, "--source", "margin_note"]
+            text = f"{content} [reach: {reach}]"
     else:
-        note = content
+        text = f"{CURATOR_SUBJECT} captured: {content}"
         if reach:
-            note = f"{content} [reach: {reach}]"
-        cmd = ["spine", "add", CURATOR_SUBJECT, "captured", note, "--source", "margin_note"]
+            text = f"{text} [reach: {reach}]"
+
+    cmd = ["grafeo-memory", "add", text]
 
     for attempt in range(3):
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
             if result.returncode == 0:
-                log(f"spine add ok: {content[:80]}")
+                log(f"grafeo-memory add ok: {content[:80]}")
                 return True
-            if "lock" in result.stderr.lower():
+            if "lock" in result.stderr.lower() or "busy" in result.stderr.lower():
                 import time
                 time.sleep(1.5 * (attempt + 1))
                 continue
-            log(f"spine add failed: {result.stderr[:200]}")
+            log(f"grafeo-memory add failed: {result.stderr[:200]}")
             return False
         except FileNotFoundError:
-            log("spine binary not found — install spine first")
+            log("grafeo-memory binary not found — pip install -r requirements.txt inside your project's virtualenv")
             return False
         except Exception as e:
-            log(f"spine add error: {e}")
+            log(f"grafeo-memory add error: {e}")
             return False
-    log(f"spine add gave up after retries: {content[:80]}")
+    log(f"grafeo-memory add gave up after retries: {content[:80]}")
     return False
 
 
 def run_mem_add(content, reach):
-    """Write to mem via subprocess."""
-    note = content
+    """Write a [[mem: ...]] marker to grafeo-memory.
+
+    grafeo-memory unifies the spine and mem stores, so we route mem markers
+    through the same backend with a small prefix so episodic captures are
+    distinguishable from semantic ones in search results.
+    """
+    note = f"observation: {content}"
     if reach:
-        note = f"{content} [reach: {reach}]"
-    cmd = ["mem", "add", "--type", "observation", note]
+        note = f"{note} [reach: {reach}]"
+    cmd = ["grafeo-memory", "add", note]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
         if result.returncode == 0:
-            log(f"mem add ok: {content[:80]}")
+            log(f"grafeo-memory mem add ok: {content[:80]}")
             return True
-        log(f"mem add failed: {result.stderr[:200]}")
+        log(f"grafeo-memory mem add failed: {result.stderr[:200]}")
         return False
     except FileNotFoundError:
-        log("mem binary not found — install mem first")
+        log("grafeo-memory binary not found — pip install -r requirements.txt inside your project's virtualenv")
         return False
     except Exception as e:
-        log(f"mem add error: {e}")
+        log(f"grafeo-memory mem add error: {e}")
         return False
 
 

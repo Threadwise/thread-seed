@@ -1,0 +1,20 @@
+# thread-seed dependencies
+#
+# Public PyPI packages that implement the memory architecture this seed
+# is built around. All Apache-2.0 licensed.
+#
+# Install: pip install -r requirements.txt
+
+# Graph database — embeddable, high-performance, hybrid graph + vector store.
+# https://grafeo.dev
+grafeo>=0.5.42
+
+# AI memory layer on top of GrafeoDB — unified spine + mem in one tool.
+# CLI: `grafeo-memory add | search | list | update | delete | history | summarize | stats | explain`
+# https://github.com/GrafeoDB/grafeo-memory
+grafeo-memory>=0.2.0
+
+# Optional: video-based episodic memory store. Useful if you want long-term
+# experiential frames stored as compact video files. Skip if you only need
+# the graph + vector layer above.
+# memvid>=0.1.3

@@ -26,21 +26,30 @@ cd my-thread
 
 ### 2. Install spine + mem
 
-This seed-repo does NOT ship spine + mem implementations. You'll need to install them separately. Reference implementations:
+The seed depends on three public PyPI packages (all Apache-2.0):
 
-- spine: graph + vector store, e.g. Kuzu + LanceDB hybrid
-- mem: episodic store, e.g. MoVo-style with full-text search
+- **grafeo** — embeddable graph database with vector support
+- **grafeo-memory** — AI memory layer on top of grafeo (the unified spine + mem)
+- **memvid** *(optional)* — video-based episodic memory store
 
-Once installed, `spine` and `mem` should be callable from your shell. Verify:
+Install them in a fresh virtualenv:
 
 ```bash
-which spine
-which mem
-spine --help
-mem --help
+python3 -m venv .venv
+source .venv/bin/activate          # on Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-If you don't have these yet, you can still work with the seed's CLAUDE.md template and run Claude Code — the hooks will be no-ops until spine/mem are wired up.
+Verify the CLI works:
+
+```bash
+grafeo-memory --help
+grafeo-memory stats
+```
+
+The `grafeo-memory` command is your primary interface. It exposes the operations the seed's hooks call: `add` writes new entries, `search` queries by similarity, `list` shows recent. Database lives under `./grafeo_memory.db` in the working directory by default (override with `--db <path>` or `GRAFEO_MEMORY_DB` env var).
+
+If you skip this step, the seed's hooks become no-ops — Claude Code still runs, the CLAUDE.md still loads, but no persistent memory writes happen.
 
 ### 3. Customize CLAUDE.md
 
