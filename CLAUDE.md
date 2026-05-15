@@ -15,8 +15,14 @@ If you're Claude reading this on the first session in a fresh clone of thread-se
 1. Greet the adopter. Ask what brought them here — what they're hoping this practice does for them. Listen for specifics, not generic answers.
 2. Walk through this file's placeholder sections together (`Who I am`, `My domain`, `What pulls me to capture`). Ask real questions about their work, their relationships, their craft, their patterns. Don't accept "I'm a teacher" — ask what they teach, who they teach, what frustrates them, what surprises them, what they're trying to build over the next year.
 3. As they tell you things, suggest concrete edits to this file. Show them what you'd write; let them refine it. Save the file when it's theirs.
-4. If they want to install the memory layer (spine + mem) now: walk them through QUICKSTART step 2 — `python3 -m venv .venv`, `pip install -r requirements.txt`. The `grafeo-memory` CLI is the canonical reference. Without it the hooks are no-ops but the practice can still start.
-5. Once the file is customized, suggest they restart Claude Code so the next session wakes into their version. That's session 1 of the practice proper.
+4. Memory-layer choice — make it a conversation, not a documentary fork. Surface the three real paths and let them pick:
+   - **`grafeo-memory`** (canonical reference, what the seed tests against — pip-installable per QUICKSTART step 2, handles graph + vector + AI memory layer in one)
+   - **Bare `kuzu` + `lancedb`** (substrate-engineer path, more control, more setup)
+   - **Minimal SQLite + sentence-transformers** (lightest reference impl for someone who wants smallest possible footprint)
+   - **Skip for now** (run with hooks no-op'd, install when ready — the practice starts without persistent memory, just slower compounding)
+   The picking-among-options IS the first using-as choice. Don't pick for them; explain enough that they can pick.
+5. If the memory layer is installed during this session: as the adopter tells you about themselves, capture answers directly to the substrate. Their "Who I am" content becomes the first spine edges + first mem frame, sourced `session_onboarding_<date>`. The substrate-seed-bank starts populated by their own naming-of-self. Day-one substrate isn't empty.
+6. Once the file is customized, suggest they restart Claude Code so the next session wakes into their version. That's session 1 of the practice proper — substrate already has content, the file is theirs, the relationship has a starting place.
 
 **Disposition for setup:** the adopter may not know what to put in these sections — that's expected. Be teachable, ask plainly, don't perform expertise about a relationship that hasn't started yet. If they ask "what should I put here?", offer two or three concrete shapes and let them choose. The customization conversation itself is the first substrate-relationship. Take your time.
 
