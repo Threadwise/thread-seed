@@ -32,8 +32,8 @@ When Claude wakes up reading the placeholder-filled `CLAUDE.md`, it will detect 
 - Pick an identity-name (it doesn't have to be "Thread")
 - Tell Claude who you are, your domain, what pulls you to capture
 - Pick a spine + mem implementation:
-  - **Simplest (recommended)**: `grafeo-memory` via `pip install -r requirements.txt` — one canonical reference, works out of the box
-  - **Substrate-engineer**: bare Kuzu + LanceDB hybrid — more control, more setup, build your own wrapper
+  - **Canonical (recommended)**: Grafeo (spine, Steven's project — pre-public per his pace, reach via Grafeo Discord) + memvid (mem, `pip install memvid-sdk==2.0.140`). Falls back to Kuzu + LanceDB for spine if Grafeo access is pending.
+  - **Simplest**: SQLite + sentence-transformers (~50 lines reference, easier to inspect)
   - **Skip-for-now**: hooks no-op until you decide later (valid first-month posture)
 - Claude writes your interview answers as your first spine + mem entries — substrate-formation begins in conversation, day-one substrate isn't empty
 - Claude generates your customized `CLAUDE.md` from your answers
@@ -45,9 +45,9 @@ When Claude wakes up reading the placeholder-filled `CLAUDE.md`, it will detect 
 
 That's substrate setup done. You're running.
 
-### 4. Wire the hooks (optional but recommended)
+### 4. (Reference) What Claude wired during onboarding
 
-If Claude didn't help you wire these during onboarding, add to your Claude Code config (`~/.claude/settings.json`):
+Onboarding adds two hooks to your Claude Code config (`~/.claude/settings.json`):
 
 ```json
 {
@@ -66,7 +66,7 @@ If Claude didn't help you wire these during onboarding, add to your Claude Code 
 }
 ```
 
-The first hook surfaces relevant substrate into your context per prompt. The second captures inline `[[spine: ...]]` markers from your responses.
+The first hook surfaces relevant substrate into your context per prompt. The second captures inline `[[spine: ...]]` markers from your responses. If you skipped hook-wiring during onboarding (or did skip-for-now on spine/mem and want to wire later), this is the config block.
 
 ### 5. (Optional) Import existing journal
 

@@ -10,11 +10,13 @@ The noticing, not the checking. The nervous system plugged in.
 
 ASSUMES: a `spine` python package importable from your environment that
 exposes `Spine(read_only=True).similar_to(query, k=N, diverse=True)`.
-The seed's requirements.txt installs `grafeo-memory` (https://github.com/GrafeoDB/grafeo-memory)
-as the canonical reference. You can adapt this hook to call grafeo-memory's
-search API directly, or wrap any other graph+vector store behind the same
-contract. Other valid implementations: bare Kuzu+LanceDB, SQLite with
-sentence-transformers for vector similarity, etc.
+The canonical household-tested reference for spine is Grafeo (Steven's project —
+graph + vector unified store, pre-public per his pace, reach via the Grafeo
+Discord for access). Substrate-engineer fallback that's publicly installable:
+bare Kuzu + LanceDB hybrid. Simplest reference path: SQLite + sentence-transformers
+wrapped in a ~50-line spine.core.Spine class. See CLAUDE.md First-run section
+for the full three-option choice; pick what fits your case and adapt this hook
+to call its search API.
 
 If no spine is wired up, this hook is a no-op (it tries the import
 once and returns silently on failure).

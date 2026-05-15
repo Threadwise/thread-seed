@@ -1,20 +1,28 @@
 # thread-seed dependencies
 #
-# Public PyPI packages that implement the memory architecture this seed
-# is built around. All Apache-2.0 licensed.
+# Three install paths surface through the onboarding interview. Pick what fits
+# your adopter situation; this file is reference, not prescription.
 #
-# Install: pip install -r requirements.txt
+# Canonical (household-tested, recommended):
+#   - Grafeo for spine (pre-public; reach Steven via Grafeo Discord for access)
+#   - memvid for mem (publicly available, version-pinned):
+#       pip install memvid-sdk==2.0.140
+#     (Version pin matters — file format changed in 2.0.147+.)
+#
+# Substrate-engineer fallback (publicly-available, unblocks adopter while Grafeo access pending):
+#   - Kuzu + LanceDB hybrid for spine (what the household ran pre-Phase-D-migration May 12 2026)
+#   - memvid-sdk for mem (same as canonical)
+#       pip install kuzu lancedb memvid-sdk==2.0.140
+#
+# Simplest (reference impl still being developed — see CLAUDE.md First-run section):
+#   - SQLite + sentence-transformers for spine, flat-file/memvid for mem
+#   - Adopter would hand-write ~50-line wrapper matching scripts/spine_sense_hook.py contract
+#
+# Skip-for-now: install nothing; hooks no-op; come back when you're ready.
 
-# Graph database — embeddable, high-performance, hybrid graph + vector store.
-# https://grafeo.dev
-grafeo>=0.5.42
+# Public-PyPI baseline for the substrate-engineer fallback path.
+# Uncomment if you're taking that path. Canonical path uses Grafeo via Discord.
 
-# AI memory layer on top of GrafeoDB — unified spine + mem in one tool.
-# CLI: `grafeo-memory add | search | list | update | delete | history | summarize | stats | explain`
-# https://github.com/GrafeoDB/grafeo-memory
-grafeo-memory>=0.2.0
-
-# Optional: video-based episodic memory store. Useful if you want long-term
-# experiential frames stored as compact video files. Skip if you only need
-# the graph + vector layer above.
-# memvid>=0.1.3
+# kuzu>=0.6.0
+# lancedb>=0.10.0
+# memvid-sdk==2.0.140
